@@ -2,6 +2,47 @@
 
 A personal collection of agent skills for Claude Code, extending capabilities across planning, development, and tooling.
 
+## Setup
+
+Clone this repo into your Claude Code skills directory:
+
+```bash
+git clone https://github.com/datnt97/claude-skills.git ~/.claude/skills
+```
+
+To update skills to the latest version:
+
+```bash
+cd ~/.claude/skills && git pull
+```
+
+Claude Code automatically loads all skills from `~/.claude/skills` on startup — no further configuration needed.
+
+## How Skills Work
+
+Skills extend what Claude can do. Each skill has a `SKILL.md` with instructions that Claude follows when invoked.
+
+**Invoking a skill:**
+- **Directly**: type `/skill-name` in Claude Code
+- **Automatically**: Claude loads it when your message matches the skill's `description`
+
+**Scope priority** (higher wins when names conflict):
+
+| Location   | Path                                     | Applies to          |
+| :--------- | :--------------------------------------- | :------------------ |
+| Personal   | `~/.claude/skills/<skill-name>/SKILL.md` | All your projects   |
+| Project    | `.claude/skills/<skill-name>/SKILL.md`   | This project only   |
+
+**Key frontmatter fields in `SKILL.md`:**
+
+| Field                      | Description                                                                  |
+| :------------------------- | :--------------------------------------------------------------------------- |
+| `name`                     | Becomes the `/slash-command`. Defaults to directory name if omitted.         |
+| `description`              | Tells Claude when to auto-invoke. Omit to disable automatic triggering.      |
+| `disable-model-invocation` | Set `true` to allow only manual `/name` invocation (e.g. deploy, commit).   |
+| `allowed-tools`            | Tools Claude can use without asking permission when this skill is active.    |
+| `context: fork`            | Run the skill in an isolated subagent (no access to conversation history).   |
+
 ## Skills
 
 ### Planning & Design
@@ -32,7 +73,7 @@ Each skill lives in its own directory:
 
 ```
 skill-name/
-├── SKILL.md        # Main instructions loaded into Claude's context
+├── SKILL.md        # Main instructions (required)
 ├── REFERENCE.md    # Detailed docs (if needed)
 └── scripts/        # Utility scripts (if needed)
 ```
